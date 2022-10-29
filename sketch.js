@@ -15,8 +15,8 @@ function heuristic(a,b){
   return d;
 }
 
-var cols=25;
-var rows=25;
+var cols=50;
+var rows=50;
 var grid = new Array(rows);
 
 //Starting and ending points of the search
@@ -32,7 +32,6 @@ var w,h;
 
 var path=[];
 
-
 function Spot(i,j){
   //Properties
   this.i=i;
@@ -42,12 +41,18 @@ function Spot(i,j){
   this.h=0;
   this.neighbours=[];
   this.previous=undefined;
-  
+  this.wall=false;
 
+  if(random(1)<0.3){
+    this.wall=true;
+  }
 
   //Methods
   this.show = function(col){
     fill(col);
+    if(this.wall){
+      fill(0);
+    }
     noStroke();
     rect(this.i * w,this.j * h,w-1,h-1);
   }
@@ -64,6 +69,18 @@ function Spot(i,j){
     }
     if(j>0){
       this.neighbours.push(grid[i][j-1]);
+    }
+    if(i>0 && j>0){
+      this.neighbours.push(grid[i-1][j-1]);
+    }
+    if(i<rows-1 && j<cols-1){
+      this.neighbours.push(grid[i+1][j+1]);
+    }
+    if(i>0 && j<cols-1){
+      this.neighbours.push(grid[i-1][j+1]);
+    }
+    if(i<rows-1 && j>0){
+      this.neighbours.push(grid[i+1][j-1]);
     }
   }
 }
@@ -96,6 +113,9 @@ function setup() {
 
   start=grid[0][0];
   end=grid[rows-1][cols-1];
+  start.wall=false;
+  end.wall=false;
+
 
   openSet.push(start);
 }
@@ -129,23 +149,28 @@ function draw() {
 
     for(var i=0;i<neighbourOfCurrent.length;i++){
       var neigh=neighbourOfCurrent[i];
-      if(!closedSet.includes(neigh)){
+      if(!closedSet.includes(neigh) && !neigh.wall){
         var tempG=current.g+1;
+        var newPath=false;
         if(openSet.includes(neigh)){
           if(tempG<neigh.g){
+            newPath=true;
             neigh.g=tempG;
           }
         }
         else{
           neigh.g=tempG;
+          newPath=true;
           openSet.push(neigh);
         }
+        if(newPath){
+          neigh.h=heuristic(neigh,end);
+          neigh.f=neigh.g+neigh.h;
 
-        neigh.h=heuristic(neigh,end);
-        neigh.f=neigh.g+neigh.h;
-
-        //For keeping track that from where it came
-        neigh.previous=current;
+          //For keeping track that from where it came
+          neigh.previous=current;
+        }
+        
 
 
       }
@@ -156,6 +181,9 @@ function draw() {
   }
   else{
     //All grid points are been visited
+    console.log("No Solution");
+    noLoop();
+    return;
   }
   background(0);
 
@@ -187,6 +215,7 @@ function draw() {
     path.push(temp.previous);
     temp=temp.previous;
   }
+  
 
   for(var i=0;i<path.length;i++){
     path[i].show(color(0,0,255));
