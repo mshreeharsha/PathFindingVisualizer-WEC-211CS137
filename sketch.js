@@ -44,7 +44,7 @@ function Spot(i,j){
   this.neighbours=[];
   this.previous=undefined;
   this.wall=false;
-
+  
   if(random(1)<0.35){
     this.wall=true;
   }
@@ -108,7 +108,7 @@ function setup() {
     window.location.reload();
   }
 
-
+  
   w=width/cols;
   h=height/rows;
 
@@ -141,7 +141,7 @@ function setup() {
 
   openSet.push(start);
 }
-
+console.log(arrayx);
 function toggle(){
   drawThings = !drawThings;
     
@@ -152,7 +152,7 @@ function draw() {
   // function mouseClicked(){
     if(drawThings){
 
-  
+      
 
   if(openSet.length>0){
     //Implies still grid points need to be visited
@@ -167,6 +167,7 @@ function draw() {
     var current=openSet[lowestIndex];
 
     if(current === end){
+      console.log(arrayx);
       noLoop();
       document.querySelector("h2").style.visibility = 'visible';
     }
@@ -225,7 +226,6 @@ function draw() {
 
 
   //For Debugging
-  
   for(var i=0;i<rows;i++){
     for(var j=0;j<cols;j++){
       grid[i][j].show(color(255));

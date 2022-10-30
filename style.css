@@ -20,12 +20,22 @@ h1 {
 }
 
 h2{
-  font-size: 2rem;
+  font-size: 3rem;
   font-family: 'Montserrat', sans-serif;
   color:#66BFBF;
   font-weight: normal;
   visibility: hidden;
+}
 
+a{
+  font-size: 2rem;
+  font-family:'Merriweather',sans-serif ;
+  color: #3498db;
+  font-weight: normal;
+}
+
+a:hover{
+  color:#DA0463;
 }
 
 button {
@@ -44,6 +54,7 @@ button {
   padding: 10px 20px 10px 20px;
   text-decoration: none;
   margin-left: 20px;
+  margin-top:20px;
 }
 button:hover {
   background: #3cb0fd;
