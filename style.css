@@ -30,12 +30,12 @@ h2{
 a{
   font-size: 2rem;
   font-family:'Merriweather',sans-serif ;
-  color: #3498db;
+  color:#DA0463;
   font-weight: normal;
 }
 
 a:hover{
-  color:#DA0463;
+  color:#3498db;
 }
 
 button {

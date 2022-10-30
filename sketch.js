@@ -44,7 +44,7 @@ function Spot(i,j){
   this.neighbours=[];
   this.previous=undefined;
   this.wall=false;
-  
+
   if(random(1)<0.35){
     this.wall=true;
   }
@@ -167,7 +167,6 @@ function draw() {
     var current=openSet[lowestIndex];
 
     if(current === end){
-      console.log(arrayx);
       noLoop();
       document.querySelector("h2").style.visibility = 'visible';
     }
