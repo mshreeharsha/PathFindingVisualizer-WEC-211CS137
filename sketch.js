@@ -1,4 +1,6 @@
 
+var drawThings = false;
+
 
 function removeElement(arr,key){
   for(var i=arr.length-1;i>=0;i--){
@@ -43,7 +45,7 @@ function Spot(i,j){
   this.previous=undefined;
   this.wall=false;
 
-  if(random(1)<0.3){
+  if(random(1)<0.35){
     this.wall=true;
   }
 
@@ -52,9 +54,17 @@ function Spot(i,j){
     fill(col);
     if(this.wall){
       fill(0);
+      noStroke();
+      ellipse(this.i * w + w/2,this.j * h + h/2,w/2,h/2);
+      //rect(this.i * w,this.j * h,w-1,h-1);
     }
-    noStroke();
-    rect(this.i * w,this.j * h,w-1,h-1);
+  }
+
+  this.mark=function(col){
+    fill(col);
+    //noStroke();
+    //rect(0,0,w-1,h-1);
+    ellipse(this.i * w + w/2,this.j * h + h/2,w/2,h/2);
   }
 
   this.addNeighbours=function(grid){
@@ -86,12 +96,24 @@ function Spot(i,j){
 }
 
 function setup() {
-  createCanvas(400, 400);
+
+  createCanvas(600, 600);
+  let startbtn = createButton("Start")
+  startbtn.mousePressed(toggle)
+
+  let refreshbtn=createButton("Refresh");
+  refreshbtn.mousePressed(refreshPage);
+
+  function refreshPage(){
+    window.location.reload();
+  }
+
+
   w=width/cols;
   h=height/rows;
 
 
-  //Crreating a 2D array using new Array JS keyword
+  //Creating a 2D array using new Array JS keyword
   for(var i=0;i<rows;i++){
     grid[i]=new Array(cols);
   }
@@ -119,8 +141,18 @@ function setup() {
 
   openSet.push(start);
 }
+
+function toggle(){
+  drawThings = !drawThings;
+    
+}
 //The draw() function in p5 runs as a loop. The code inside the draw() function runs continuously from top to bottom until the program is stopped. 
+
 function draw() {
+  // function mouseClicked(){
+    if(drawThings){
+
+  
 
   if(openSet.length>0){
     //Implies still grid points need to be visited
@@ -136,7 +168,7 @@ function draw() {
 
     if(current === end){
       noLoop();
-      console.log("DONE");
+      document.querySelector("h2").style.visibility = 'visible';
     }
 
     removeElement(openSet,current);
@@ -181,23 +213,28 @@ function draw() {
   }
   else{
     //All grid points are been visited
-    console.log("No Solution");
     noLoop();
+    document.querySelector("h2").textContent='Sorry !!! Path Does Not Exist!!!';
+    document.querySelector("h2").style.visibility='visible';
     return;
   }
-  background(0);
+
+  background(220);
 
 
 
 
   //For Debugging
+  
   for(var i=0;i<rows;i++){
     for(var j=0;j<cols;j++){
       grid[i][j].show(color(255));
     }
   }
 
+  
 
+/*
   for(var i=0;i<closedSet.length;i++){
     closedSet[i].show(color(255,0,0));
   }
@@ -205,7 +242,7 @@ function draw() {
   for(var i=0;i<openSet.length;i++){
     openSet[i].show(color(0,255,0));
   }
-  
+  */
 
   //Finding the path
   path=[];
@@ -217,10 +254,19 @@ function draw() {
   }
   
 
-  for(var i=0;i<path.length;i++){
-    path[i].show(color(0,0,255));
-  }
+  
+  noFill();
+  stroke(255,0,220);
+  strokeWeight(w/2);
+  beginShape();
+    for(var i=0;i<path.length;i++){
+      vertex(path[i].i*w + w/2,path[i].j*h +h/2);
+    }
+  endShape();
+  start.mark(color(0,0,0));
+  end.mark(color(0,0,0));
 
-
+  
+}
 
 }
